@@ -41,8 +41,8 @@ const authStyles = {
         marginTop: '10px'
     },
     stack: {
-        width: '400px',
-        marginTop: '100px',
+        width: '600px',
+        marginTop: '300px',
         marginRight: 'auto', //used a lot to center your div
         marginLeft: 'auto',
         color: 'white'
@@ -129,7 +129,7 @@ const GoogleButton = (_props: ButtonProps ) => {
                 sx = { authStyles.button }
                 onClick = { signIn }
             >
-                Sign In With Google
+                Google Sign in
             </Button>
             <Snackbar
                 open = {open}
@@ -188,7 +188,7 @@ const SignIn = () => {
     return (
         <Box>
             <form onSubmit = {handleSubmit(onSubmit)}>
-                <Typography variant='h6'>Sign Into Your Account</Typography>
+                <Typography variant='h6'>Welcome back!</Typography>
                 <Box>
                     <label htmlFor='email'></label>
                     <InputText {...register('email')} name='email' placeholder='Email Here' />
@@ -289,7 +289,7 @@ export const Auth = (props:Props) => {
 
 
     return (
-        <Box>
+        <Box >
             <NavBar />
             <Box sx={ authStyles.main}>
                 <Stack direction = 'column' alignItems = 'center' textAlign = 'center' sx={authStyles.stack}>
@@ -298,7 +298,7 @@ export const Auth = (props:Props) => {
                     </Typography>
                     <br />
                     <Typography variant='h5'>
-                        Track your shops items for free!
+                        Find your next Home in one Place!
                     </Typography>
                     <br />
                     <GoogleButton open={open} onClick={() => setOpen(false)} />

@@ -27,6 +27,36 @@ import { ShopProps } from '../../customHooks';
 import { shopStyles } from '../Shop';
 import { serverCalls } from '../../api';
 import { MessageType } from '../Auth'; 
+import shopImage from '../../assets/images/nona-orlando.jpeg'
+
+
+const likedStyles = {
+    main: {
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .5)), url(${shopImage});`,
+        height: '100%',
+        width: '100%',
+        color: 'white',
+        backgroundSize: 'cover',
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+        backgroundAttachment: 'fixed',
+        position: 'absolute',
+        overflow: 'auto',
+        paddingBottom: '100px'
+    },
+
+    card: {
+        width: "300px", 
+        padding: '10px',
+        display: "flex",
+        flexDirection: "column",
+        backgroundColor: theme.palette.secondary.light,
+        border: '2px solid',
+        borderColor: theme.palette.primary.light,
+        borderRadius: '10px',
+        // gridTemplateColumns: '1fr 1fr'
+    }
+}
 
 
 export const Cart = () => {
@@ -37,7 +67,7 @@ export const Cart = () => {
     const [ messageType, setMessageType ] = useState<MessageType>()
     const [ currentCart, setCurrentCart ] = useState<ShopProps[]>()
     const userId = localStorage.getItem('uuid')
-    const cartRef = ref(db, `carts/${userId}/`); 
+    const propRef = ref(db, `property/${userId}/`); 
 
 
     // useEffect to monitor changes to our cart in our database
@@ -46,27 +76,27 @@ export const Cart = () => {
 
 
         // onValue() is listening for changes in cart
-        onValue(cartRef, (snapshot) => {
+        onValue(propRef, (snapshot) => {
             const data = snapshot.val() //grabbing our cart data from the database
-
+            console.log(data)
             // whats coming back from the database is essentially a dictionary/object
-            // we want our ddata to be a list of objects so we can forloop/map over them
-            let cartList = []
+            // we want our data to be a list of objects so we can forloop/map over them
+            let propertyList = []
 
             if (data){
                 for (let [key, value] of Object.entries(data)){
-                    let cartItem = value as ShopProps
-                    cartItem['id'] = key
-                    cartList.push(cartItem)
+                    let propItem = value as ShopProps
+                    propItem['id'] = key
+                    propertyList.push(propItem)
                 }
             }
 
-            setCurrentCart(cartList as ShopProps[])
+            setCurrentCart(propertyList as ShopProps[])
         })
 
         // using the off to detach the listener (aka its basically refreshing the listener)
         return () => {
-            off(cartRef)
+            off(propRef)
         }
     },[]);
 
@@ -119,9 +149,9 @@ export const Cart = () => {
 
 
     // function to delete items from our cart
-    const deleteItem = async (cartItem: ShopProps ) => {
+    const deleteItem = async (propItem: ShopProps ) => {
 
-        const itemRef = ref(db, `carts/${userId}/${cartItem.id}`)
+        const itemRef = ref(db, `property/${userId}/${propItem.id}`)
 
 
         // use the update() from our database to update a specific cart item
@@ -144,27 +174,36 @@ export const Cart = () => {
 
 
     return (
-        <Box sx={shopStyles.main}>
+        <Box sx={likedStyles.main}>
             <NavBar />
-            <Stack direction = 'column' sx={shopStyles.main}>
-                <Stack direction = 'row' alignItems = 'center' sx={{marginTop: '100px', marginLeft: '200px'}}>
+            
+            <Stack direction = 'column' sx={likedStyles.main} >
+            {/* <div>
+                <video autoPlay loop muted>
+                    <source src={shopImage} type='video/mp4' />
+                    </video>
+            </div> */}
+
+                <Stack  alignItems = 'center' sx={{marginTop: '100px', marginLeft: '4vh'}}>
+                
                     <Typography 
-                        variant = 'h4'
-                        sx = {{ marginRight: '20px'}}
+                        variant = 'h3'
+                        sx = {{alignContent:'center'}}
+                        fontWeight='bold'
                     >
-                        Your Cart
+                        Your Liked Properties
                     </Typography>
-                    <Button color = 'primary' variant = 'contained' onClick={()=>{}} >Checkout 🎄</Button>
+                    {/* <Button color = 'primary' variant = 'contained' onClick={()=>{}} >Checkout 🎄</Button> */}
                 </Stack>
                 <Grid container spacing={3} sx={shopStyles.grid}>
-                    {currentCart?.map((cart: ShopProps, index: number) => (
+                    {currentCart?.map((property: ShopProps, index: number) => (
                         <Grid item key={index} xs={12} md={6} lg={4}>
-                            <Card sx={shopStyles.card}>
+                            <Card sx={likedStyles.card}>
                                 <CardMedia 
                                     component = 'img'
                                     sx = {shopStyles.cardMedia}
-                                    image = {cart.imgSrc}
-                                    alt = {cart.address}
+                                    image = {property.imgSrc}
+                                    alt = {property.address}
                                 />
                                 <CardContent>
                                     <Stack direction = 'column' justifyContent='space-between' alignItems = 'center'>
@@ -172,10 +211,18 @@ export const Cart = () => {
                                             <AccordionSummary 
                                                 expandIcon={<InfoIcon sx={{color: theme.palette.primary.main}}/>}
                                             >
-                                                <Typography>{cart.address}</Typography>
+                                            <div style={{display:'flex', flexDirection:'column', margin: '0 auto', width:'200px'}}>
+                                                <Typography>{property.address}</Typography>
+                                                <Typography>Bathrooms: {property.bathrooms}</Typography>
+                                                <Typography>Bedrooms: {property.bedrooms}</Typography>
+                                                <Typography>Living Area: {property.livingArea}sqft</Typography>
+                                                <Typography>Property Type: {property.propertyType}</Typography>
+                                                <Typography>Zestimate: ${property.zestimate}</Typography>
+                                            </div>
+                                
                                             </AccordionSummary>
                                             <AccordionDetails>
-                                                <Typography>{cart.price}</Typography>
+                                                <Typography>{property.price}</Typography>
                                             </AccordionDetails>
                                         </Accordion>
                                         <Stack 
@@ -198,21 +245,14 @@ export const Cart = () => {
                                                 onClick={()=>{updateQuantity(cart.id, 'inc')}}
                                             >+</Button> */}
                                         </Stack>
+                                
                                         <Button 
                                             size = 'medium'
-                                            variant = 'outlined'
+                                            variant = 'contained'
                                             sx = {shopStyles.button}
-                                            onClick = {()=>{updateCart(cart)}}
+                                            onClick = {()=>{deleteItem(property)}}
                                         >
-                                            {/* Update Quantity = ${(cart.price * parseFloat(cart.address)).toFixed(2)} */}
-                                        </Button>
-                                        <Button 
-                                            size = 'medium'
-                                            variant = 'outlined'
-                                            sx = {shopStyles.button}
-                                            onClick = {()=>{deleteItem(cart)}}
-                                        >
-                                            Delete Item From Cart
+                                            Remove This Property
                                         </Button>
                                     </Stack>
                                 </CardContent>
@@ -220,9 +260,13 @@ export const Cart = () => {
 
                         </Grid>
                     ))}
+                    
                 </Grid>
+            
             </Stack>
-
+            
         </Box>
+        
     )
 }
+

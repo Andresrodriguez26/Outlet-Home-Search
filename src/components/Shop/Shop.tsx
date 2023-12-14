@@ -85,10 +85,10 @@ export const shopStyles = {
     },
     button: {
         color: 'white', 
-        borderRadius: '50px',
-        height: '45px',
+        borderRadius: '30px',
+        height: '50px',
         width: '250px',
-        marginTop: '10px'
+        marginTop: '15px'
     },
     stack: {
         width: '75%', 
@@ -193,10 +193,13 @@ interface CartProps {
 export const Shop = () => {
     // setup our hooks
     // const { shopData } = useGetShop(); //list of all our data objects 
-    const [shopData, setShopData] = useState<[]>()
+    const [shopData, setShopData] = useState<[]>([])
     const [ currentShop, setCurrentShop] = useState<ShopProps>(); //one and only one object we will send to our cart 
     const [ cartOpen, setCartOpen ] = useState(false); 
     const { register, handleSubmit } = useForm<SubmitProps>({})
+    const [ message, setMessage] = useState<string>()
+    const [ messageType, setMessageType ] = useState<MessageType>()
+    const [ open, setOpen ] = useState(false)
 
     const onSubmit: SubmitHandler<SubmitProps> = async (data: SubmitProps, event: any) => {
         if (event) event.preventDefault(); 
@@ -204,12 +207,31 @@ export const Shop = () => {
         setShopData(apicall)
     }
 
-    // const db = getDatabase();
+    const db = getDatabase();
 
-    // let myCart = .cartItem
+    const userId = localStorage.getItem('uuid') //grabbing the user id from localstorage 
+    const propRef = ref(db, `property/${userId}/`) // this is where we are pathing in our database 
 
-    // const userId = localStorage.getItem('uuid') //grabbing the user id from localstorage 
-    // const propRef = ref(db, `property/${userId}/`) // this is where we are pathing in our database 
+      
+    const addToList = (shop: ShopProps) => {
+        console.log(currentShop)
+        push(propRef, shop)
+        .then((_newCartRef) => {
+            console.log('Success')
+            setMessage(`Successfully added item ${currentShop?.address} to Cart`)
+            setMessageType('success')
+            setOpen(true)
+        })
+        // .then(() => {
+        //     setTimeout(()=>{window.location.reload()}, 2000)
+        // })
+        .catch((error) => {
+            console.log(error.message)
+            setMessage(error.message)
+            setMessageType('error')
+            setOpen(true)
+        })
+    }
     
 
     console.log(shopData)
@@ -227,7 +249,7 @@ export const Shop = () => {
 
 
             <form onSubmit={handleSubmit(onSubmit)} >
-                <div style={{display:'gflex', flexDirection:'column', width:'400px', margin:'50px auto', border:'solid white', padding:'5vh', backgroundColor:'grey', borderRadius:'5px'}}>
+                <div style={{display:'flex', flexDirection:'column', width:'400px', margin:'50px auto', border:'solid white', padding:'5vh', backgroundColor:'grey', borderRadius:'5px'}}>
                     <label htmlFor='location'>What is the zip-code you are interested in ?</label>
                     <InputText {...register('location')} name='location' placeholder='Zip-Code Here' />
                     <label htmlFor='status_type'>Please type in ForSale or ForRent </label>
@@ -293,9 +315,9 @@ export const Shop = () => {
                                     size='medium'
                                     variant='outlined'
                                     sx={shopStyles.button}
-                                    onClick = {()=>{}}
+                                    onClick = {()=>{addToList(shop)}}
                                 >
-                                    Save This Property - ${parseFloat(shop.price).toFixed(2)}
+                                    Save This Property  ${parseFloat(shop.price).toFixed(2)}
                                 </Button>
                                 </Stack>
                             </CardContent>
@@ -312,3 +334,14 @@ export const Shop = () => {
         </Box>
     )
 }
+
+// let map: google.maps.Map;
+// async function initMap(): Promise<void> {
+//   const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+//   map = new Map(document.getElementById("map") as HTMLElement, {
+//     center: { lat: -34.397, lng: 150.644 },
+//     zoom: 8,
+//   });
+// }
+
+// initMap();

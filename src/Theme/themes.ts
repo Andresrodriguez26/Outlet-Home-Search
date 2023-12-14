@@ -14,7 +14,7 @@ export const theme = createTheme({
             light: '#1B2929'
         },
         info: {
-            main: '#44469D'
+            main: '#79b2ca'
         }
     }
 })

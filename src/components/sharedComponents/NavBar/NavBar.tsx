@@ -16,12 +16,12 @@ import {
     Box //this is just a div 
 } from '@mui/material'; 
 import { useNavigate } from 'react-router-dom'; 
-import CottageIcon from '@mui/icons-material/Cottage';
-import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
+import TravelExploreTwoToneIcon from '@mui/icons-material/TravelExploreTwoTone';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import { signOut, getAuth } from 'firebase/auth'; 
+import VillaTwoToneIcon from '@mui/icons-material/VillaTwoTone';
+import HouseTwoToneIcon from '@mui/icons-material/HouseTwoTone';
+import LoyaltyTwoToneIcon from '@mui/icons-material/LoyaltyTwoTone';
 
 
 
@@ -107,27 +107,27 @@ export const NavBar = () => {
     const navLinks = [
         {
             text: 'Home',
-            icon: <CottageIcon/>,
+            icon: <HouseTwoToneIcon/>,
             onClick: () => navigate('/')
         },
-        {  // ADD THIS
-            text: myAuth === 'true' ? 'Shop' : 'Sign In',
-            icon: myAuth === 'true' ? <ShoppingBagIcon /> : <AssignmentIndIcon />,
+        {  
+            text: myAuth === 'true' ? 'Finder' : 'Sign In',
+            icon: myAuth === 'true' ? <TravelExploreTwoToneIcon /> : <AssignmentIndIcon />,
             onClick: () => navigate(myAuth === 'true' ? '/shop' : '/auth') 
         },
-        {  // ADD THIS
-            text: myAuth === 'true' ? 'Cart' : '',
-            icon: myAuth === 'true' ? <ShoppingCartIcon /> : "",
-            onClick: myAuth === 'true' ? () => navigate('/cart') : () => {} // ADD THIS
+        {  
+            text: myAuth === 'true' ? 'My Properties' : '',
+            icon: myAuth === 'true' ? <LoyaltyTwoToneIcon /> : "",
+            onClick: myAuth === 'true' ? () => navigate('/cart') : () => {} 
         }
     ]
 
     let signInText = 'Sign In'
-       // ADD THIS
+       
     if (myAuth === 'true') { 
          signInText = 'Sign Out'
     }
- //ADD THIS
+
     const signInButton = async () => {
         if (myAuth === 'false') {
             navigate('/auth')
@@ -155,7 +155,7 @@ export const NavBar = () => {
                         edge='start'
                         sx = { open ? navStyles.hide : navStyles.menuButton }
                     >
-                        <ShoppingBasketIcon />
+                        <VillaTwoToneIcon />
                     </IconButton>
                 </Toolbar>
                 <Stack 
@@ -185,7 +185,7 @@ export const NavBar = () => {
             >
                 <Box sx = {navStyles.drawerHeader }>
                     <IconButton onClick={handleDrawerClose}>
-                        <ShoppingBasketIcon />
+                        <VillaTwoToneIcon />
                     </IconButton>
                 </Box>
                 <Divider />
