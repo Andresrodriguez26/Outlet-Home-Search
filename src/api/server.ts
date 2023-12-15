@@ -32,6 +32,31 @@ export const serverCalls = {
     }
 
 
+
+    export const mortCalls = {
+
+        getMort: async (_search: any) => {
+    
+            const options = {
+                method: 'GET',
+                url: 'https://mortgage-calculator-by-api-ninjas.p.rapidapi.com/v1/mortgagecalculator',
+                params: _search,
+                headers: {
+                  'X-RapidAPI-Key': '5ff0a59abemsh1a7801ed3d86869p10af1bjsn0d5785b8ed5a',
+                  'X-RapidAPI-Host': 'mortgage-calculator-by-api-ninjas.p.rapidapi.com'
+                }
+              };
+              
+              try {
+                  const response = await axios.request(options);
+                  console.log(response.data);
+              } catch (error) {
+                  console.error(error);
+              }
+            
+            }
+        }
+
 // console.log(serverCalls.getProperty())
 
 

@@ -28,7 +28,9 @@ import {
 // import Grid from "@mui/material/Grid";
 import InfoIcon from '@mui/icons-material/Info';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { getDatabase, ref, push } from 'firebase/database'; 
+import { getDatabase, ref, push } from 'firebase/database'
+
+
 
 
 // internal imports
@@ -218,7 +220,7 @@ export const Shop = () => {
         push(propRef, shop)
         .then((_newCartRef) => {
             console.log('Success')
-            setMessage(`Successfully added item ${currentShop?.address} to Cart`)
+            setMessage(`Successfully added house ${shop.address} to your liked properties`)
             setMessageType('success')
             setOpen(true)
         })
@@ -249,21 +251,37 @@ export const Shop = () => {
 
 
             <form onSubmit={handleSubmit(onSubmit)} >
-                <div style={{display:'flex', flexDirection:'column', width:'400px', margin:'50px auto', border:'solid white', padding:'5vh', backgroundColor:'grey', borderRadius:'5px'}}>
+                <div style={{display:'flex', flexDirection:'column', width:'800px', margin:'50px auto', border:'solid white', padding:'5vh', backgroundColor: 'grey', borderRadius:'5px'}}>
+                    <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:'25px'}}>
+                        <div>
                     <label htmlFor='location'>What is the zip-code you are interested in ?</label>
                     <InputText {...register('location')} name='location' placeholder='Zip-Code Here' />
+                        </div>
+                        <div>
                     <label htmlFor='status_type'>Please type in ForSale or ForRent </label>
                     <InputText {...register('status_type')} name='status_type' placeholder='Status' />
+                        </div>
+                        <div>
                     <label htmlFor='home_type'>Home Type </label>
                     <InputText {...register('home_type')} name='home_type' placeholder='Home Type Here' />
+                        </div>
+                        <div>
                     <label htmlFor='minPrice'>What is the Minimun Price? </label>
                     <InputText {...register('minPrice')} name='minPrice' placeholder='Min Price' />
+                        </div>
+                        <div>
                     <label htmlFor='maxPrice'>What is the Maximum Price? </label>
                     <InputText {...register('maxPrice')} name='maxPrice' placeholder='Max Price' />
+                        </div>
+                        <div>
                     <label htmlFor='bathsMax'>Baths Max?  </label>
                     <InputText {...register('bathsMax')} name='bathsMax' placeholder='Baths Max' />
+                        </div>
+                        <div>
                     <label htmlFor='bedsMax'>Beds Max? </label>
                     <InputText {...register('bedsMax')} name='bedsMax' placeholder='Beds Max' />
+                    </div>
+                    </div>
                     <div style={{display:'flex', flexDirection:'column', width:'120px', margin:'0px auto' }}>
                     <Button variant="contained" type='submit' >Search</Button>
                     </div>
@@ -308,9 +326,19 @@ export const Shop = () => {
                                             </AccordionSummary>
                                             <AccordionDetails>
                                                 <Typography>{shop.price}</Typography>
+                                                {/* <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUAz5_HZAIisjH2BP5h9WBhydbHSh_0zs &libraries=places"></script> */}
                                             </AccordionDetails>
                                         </Accordion>
                                     </Stack>
+                                    <Snackbar
+                                        open = {open}
+                                        autoHideDuration={2000}
+                                        onClose = { () => setOpen(false) }
+                                    >
+                                        <Alert severity = {messageType}>
+                                            {message}
+                                        </Alert>
+                                    </Snackbar>
                                 <Button
                                     size='medium'
                                     variant='outlined'
@@ -335,7 +363,7 @@ export const Shop = () => {
     )
 }
 
-// let map: google.maps.Map;
+
 // async function initMap(): Promise<void> {
 //   const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
 //   map = new Map(document.getElementById("map") as HTMLElement, {
@@ -345,3 +373,6 @@ export const Shop = () => {
 // }
 
 // initMap();
+
+// let map: google.maps.Map;
+

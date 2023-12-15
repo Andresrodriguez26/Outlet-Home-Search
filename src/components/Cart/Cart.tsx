@@ -27,22 +27,23 @@ import { ShopProps } from '../../customHooks';
 import { shopStyles } from '../Shop';
 import { serverCalls } from '../../api';
 import { MessageType } from '../Auth'; 
-import shopImage from '../../assets/images/nona-orlando.jpeg'
+import shopImage from '../../assets/images/production_id_4770380 (1080p).mp4'
 
 
 const likedStyles = {
     main: {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .5)), url(${shopImage});`,
+        // backgroundImage: `linear-gradient(rgba(0, 0, 0, .3), rgba(0, 0, 0, .5)), url(${shopImage});`,
         height: '100%',
         width: '100%',
-        color: 'white',
+        color: 'grey',
         backgroundSize: 'cover',
         backgroundRepeat: "no-repeat",
         backgroundPosition: "center",
         backgroundAttachment: 'fixed',
         position: 'absolute',
         overflow: 'auto',
-        paddingBottom: '100px'
+        paddingBottom: '100px',
+        // marginBottom: '-100vh'
     },
 
     card: {
@@ -54,7 +55,17 @@ const likedStyles = {
         border: '2px solid',
         borderColor: theme.palette.primary.light,
         borderRadius: '10px',
+        // transform: 'translate(-100%, -100%)'
+        position: 'relative'
         // gridTemplateColumns: '1fr 1fr'
+    },
+
+    grid: {
+        marginTop: '25px', 
+        marginRight: 'auto', 
+        marginLeft: 'auto', 
+        width: '70vw',
+        // marginBottom: '-100vh'
     }
 }
 
@@ -174,15 +185,16 @@ export const Cart = () => {
 
 
     return (
-        <Box sx={likedStyles.main}>
+        
+        <Box >
             <NavBar />
             
             <Stack direction = 'column' sx={likedStyles.main} >
-            {/* <div>
-                <video autoPlay loop muted>
+            <div style={{position:'fixed', zIndex:'-1'}}>
+                <video autoPlay loop muted >
                     <source src={shopImage} type='video/mp4' />
-                    </video>
-            </div> */}
+                </video>
+            </div>
 
                 <Stack  alignItems = 'center' sx={{marginTop: '100px', marginLeft: '4vh'}}>
                 
@@ -190,12 +202,13 @@ export const Cart = () => {
                         variant = 'h3'
                         sx = {{alignContent:'center'}}
                         fontWeight='bold'
+                        
                     >
                         Your Liked Properties
                     </Typography>
                     {/* <Button color = 'primary' variant = 'contained' onClick={()=>{}} >Checkout 🎄</Button> */}
                 </Stack>
-                <Grid container spacing={3} sx={shopStyles.grid}>
+                <Grid container spacing={3} sx={likedStyles.grid}>
                     {currentCart?.map((property: ShopProps, index: number) => (
                         <Grid item key={index} xs={12} md={6} lg={4}>
                             <Card sx={likedStyles.card}>
@@ -245,7 +258,15 @@ export const Cart = () => {
                                                 onClick={()=>{updateQuantity(cart.id, 'inc')}}
                                             >+</Button> */}
                                         </Stack>
-                                
+                                        <Snackbar
+                                            open = {open}
+                                            autoHideDuration={2000}
+                                            onClose = { () => setOpen(false) }
+                                        >
+                                            <Alert severity = {messageType}>
+                                                {message}
+                                            </Alert>
+                                        </Snackbar>
                                         <Button 
                                             size = 'medium'
                                             variant = 'contained'
